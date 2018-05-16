@@ -26,6 +26,24 @@ def loadWords():
 
     return wordlist
 
+def setDifficulty():
+    print 'Choose the game difficulty:'
+    print '0 - Easy'
+    print '1 - Medium'
+    print '2 - Hard'
+    difficulty = input()
+    return difficulty
+
+def handleDifficulty(difficulty, guesses):
+    EASY = 0
+    MEDIUM = 1
+    HARD = 2
+    if difficulty == EASY:
+        guesses[0] = 12
+    elif difficulty == MEDIUM:
+        guesses[0] = 10
+    elif difficulty == HARD:
+        guesses[0] = 8
 
 def isWordGuessed(secretWord, lettersGuessed):
     for letter in secretWord:
@@ -66,6 +84,8 @@ def handleGuessedLetter(letter, lettersGuessed, secretWord, guesses):
         lettersGuessed.append(letter)
         guessed = updateGuessedWord(letter, lettersGuessed, secretWord)
         print 'Good Guess: ', guessed
+    elif len(letter) >1:
+        print 'Please guess only one letter per guess!'
     else:
         #Fail guess
         guesses[0] -=1
@@ -74,7 +94,9 @@ def handleGuessedLetter(letter, lettersGuessed, secretWord, guesses):
         print 'Oops! That letter is not in my word: ',  guessed
 
 def hangman(secretWord):
+    difficulty = setDifficulty()
     guesses = [8]
+    handleDifficulty(difficulty, guesses)
     lettersGuessed = []
     secretWordSize = len(secretWord)
     print 'Welcome to the game, Hangam!'
