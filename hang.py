@@ -20,8 +20,9 @@ def loadWords():
 
     line = inputFile.readline()
     wordlist = string.split(line)
+    wordsAmount = len(wordlist)
 
-    print "  ", len(wordlist), "words loaded."
+    print "  ", wordsAmount, "words loaded."
 
     return wordlist
 
@@ -54,35 +55,41 @@ def updateGuessedWord(letter, lettersGuessed, secretWord):
             guessed += '_ '
     return guessed
 
-def hangman(secretWord):
+def handleGuessedLetter(letter, lettersGuessed, secretWord, guesses):
+    if letter in lettersGuessed:
+        #Letter already guessed
+        guessed = updateGuessedWord(letter, lettersGuessed, secretWord)
+        print 'Oops! You have already guessed that letter: ', guessed
+    elif letter in secretWord:
+        #Success guess
+        guesses[0] -=1
+        lettersGuessed.append(letter)
+        guessed = updateGuessedWord(letter, lettersGuessed, secretWord)
+        print 'Good Guess: ', guessed
+    else:
+        #Fail guess
+        guesses[0] -=1
+        lettersGuessed.append(letter)
+        guessed = updateGuessedWord(letter, lettersGuessed, secretWord)
+        print 'Oops! That letter is not in my word: ',  guessed
 
-    guesses = 8
+def hangman(secretWord):
+    guesses = [8]
     lettersGuessed = []
+    secretWordSize = len(secretWord)
     print 'Welcome to the game, Hangam!'
-    print 'I am thinking of a word that is', len(secretWord), ' letters long.'
+    print 'I am thinking of a word that is', secretWordSize, ' letters long.'
     print '-------------'
 
-    while  isWordGuessed(secretWord, lettersGuessed) == False and guesses >0:
-        print 'You have ', guesses, 'guesses left.'
+    while  isWordGuessed(secretWord, lettersGuessed) == False and guesses[0] >0:
+        print 'You have ', guesses[0], 'guesses left.'
 
         available = getAvailableLetters()
         available = popLetterFromString(available, lettersGuessed)
 
         print 'Available letters', available
         letter = raw_input('Please guess a letter: ')
-
-        if letter in lettersGuessed:
-            guessed = updateGuessedWord(letter, lettersGuessed, secretWord)
-            print 'Oops! You have already guessed that letter: ', guessed
-        elif letter in secretWord:
-            lettersGuessed.append(letter)
-            guessed = updateGuessedWord(letter, lettersGuessed, secretWord)
-            print 'Good Guess: ', guessed
-        else:
-            guesses -=1
-            lettersGuessed.append(letter)
-            guessed = updateGuessedWord(letter, lettersGuessed, secretWord)
-            print 'Oops! That letter is not in my word: ',  guessed
+        handleGuessedLetter(letter, lettersGuessed, secretWord, guesses)
         print '------------'
 
     else:
