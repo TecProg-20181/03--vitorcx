@@ -3,6 +3,7 @@ import random
 import string
 
 WORDLIST_FILENAME = "words.txt"
+GUESSES_AMOUNT_INDEX = 0
 
 def getRandomElement(wordlist):
     return random.choice(wordlist)
@@ -38,12 +39,15 @@ def handleDifficulty(difficulty, guesses):
     EASY = 0
     MEDIUM = 1
     HARD = 2
+    EASY_GUESSES_AMOUNT = 12
+    MEDIUM_GUESSES_AMOUNT = 10
+    HARD_GUESSES_AMOUNT = 8
     if difficulty == EASY:
-        guesses[0] = 12
+        guesses[GUESSES_AMOUNT_INDEX] = EASY_GUESSES_AMOUNT
     elif difficulty == MEDIUM:
-        guesses[0] = 10
+        guesses[GUESSES_AMOUNT_INDEX] = MEDIUM_GUESSES_AMOUNT
     elif difficulty == HARD:
-        guesses[0] = 8
+        guesses[GUESSES_AMOUNT_INDEX] = HARD_GUESSES_AMOUNT
 
 def isWordGuessed(secretWord, lettersGuessed):
     for letter in secretWord:
@@ -95,16 +99,18 @@ def handleGuessedLetter(letter, lettersGuessed, secretWord, guesses):
 
 def hangman(secretWord):
     difficulty = setDifficulty()
-    guesses = [8]
+    DEFAULT_GUESSES_AMOUNT = 8
+    guesses = [DEFAULT_GUESSES_AMOUNT]
     handleDifficulty(difficulty, guesses)
+
     lettersGuessed = []
     secretWordSize = len(secretWord)
     print 'Welcome to the game, Hangam!'
     print 'I am thinking of a word that is', secretWordSize, ' letters long.'
     print '-------------'
 
-    while  isWordGuessed(secretWord, lettersGuessed) == False and guesses[0] >0:
-        print 'You have ', guesses[0], 'guesses left.'
+    while  isWordGuessed(secretWord, lettersGuessed) == False and guesses[GUESSES_AMOUNT_INDEX] >0:
+        print 'You have ', guesses[GUESSES_AMOUNT_INDEX], 'guesses left.'
 
         available = getAvailableLetters()
         available = popLetterFromString(available, lettersGuessed)
@@ -119,7 +125,6 @@ def hangman(secretWord):
             print 'Congratulations, you won!'
         else:
             print 'Sorry, you ran out of guesses. The word was ', secretWord, '.'
-
 
 
 wordlist = loadWords()
